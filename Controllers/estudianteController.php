@@ -1,8 +1,13 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Origin: *"); // O tu dominio específico
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+// Manejo específico para solicitudes OPTIONS
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 // file: controllers/UserController.php
 include_once '../models/Estudiante.php';
 
@@ -77,34 +82,49 @@ switch ($request) {
 
     case 'POST':
         $data = json_decode(file_get_contents("php://input"));
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Recibir los datos del formulario
 
-        if (!empty($data->nombre) && !empty($data->correo)) {
-            $estudiante->codigoAlumno = $data->codigoAlumno;
-            $estudiante->nombre = $data->nombre;
-            $estudiante->apellidoPaterno = $data->apellidoPaterno;
-            $estudiante->apellidoMaterno = $data->apellidoMaterno;
-            $estudiante->telefono = $data->telefono;
-            $estudiante->correo = $data->correo;
-            $estudiante->password = $data->password;
 
-            // Verificar si el email ya existe
+            $correo = isset($_POST['correo']) ? $_POST['correo'] : '';
+            $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
+            $apellidoPaterno = isset($_POST['apellidoPaterno']) ? $_POST['apellidoPaterno'] : '';
+            $apellidoMaterno = isset($_POST['apellidoMaterno']) ? $_POST['apellidoMaterno'] : '';
+            $codigoAlumno = isset($_POST['codigoAlumno']) ? $_POST['codigoAlumno'] : '';
+            $telefono = isset($_POST['telefono']) ? $_POST['telefono'] : '';
+            $password = isset($_POST['password']) ? $_POST['password'] : '';
+            $estudiante->codigoAlumno =$correo;
+            $estudiante->nombre = $nombre;
+            $estudiante->apellidoPaterno = $apellidoPaterno;
+            $estudiante->apellidoMaterno = $apellidoMaterno;
+            $estudiante->telefono = $telefono;
+            $estudiante->correo = $correo;
+            $estudiante->password = $password;
+
+            // Validar datos
+            if (empty($correo) || empty($nombre) || empty($apellidoPaterno) ||
+                empty($codigoAlumno) || empty($password)) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Faltan campos requeridos']);
+                exit;
+            }
+
             if ($estudiante->emailExiste()) {
                 http_response_code(409); // Conflict
-                echo json_encode(array("message" => "User already exists with this email."));
+                echo json_encode(array("message" => "Ya existe un usuario con este correo."));
             }
-            if ($estudiante->codigoAlumnoExiste()) {
+            else if ($estudiante->codigoAlumnoExiste()) {
                 http_response_code(409); // Conflict
-                echo json_encode(array("message" => "User already exists with this email."));
+                echo json_encode(array("message" => "Ya existe un usuario con este codigo."));
             }else if ($estudiante->create()) {
                 http_response_code(201);
                 echo json_encode(array("message" => "User was created."));
-            } else {
-                http_response_code(503);
-                echo json_encode(array("message" => "Unable to create user."));
             }
         } else {
-            http_response_code(400);
-            echo json_encode(array("message" => "Unable to create user. Data incomplete."));
+            // Método no permitido
+            http_response_code(405);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
         }
         break;
 

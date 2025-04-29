@@ -46,6 +46,7 @@ class Estudiante
 
     public function create()
     {
+
         $this->uuid = generarUuid();
         $this->codigoAlumno = filter_var($this->codigoAlumno, FILTER_UNSAFE_RAW);
         $this->nombre = filter_var($this->nombre, FILTER_UNSAFE_RAW);
@@ -54,7 +55,7 @@ class Estudiante
         $this->apellidoMaterno = filter_var($this->apellidoMaterno, FILTER_UNSAFE_RAW);
         $this->telefono = filter_var($this->telefono, FILTER_UNSAFE_RAW);
         $this->correo = filter_var($this->correo, FILTER_UNSAFE_RAW);
-        $query = "INSERT INTO estudiante SET uuid=:uuid, codigoAlumno=:codigoAlumno, password=:password, nombre=:nombre, apellidoPaterno=:apellidoPaterno, apellidoMaterno=:apellidoMaterno, correo=:correo";
+        $query = "INSERT INTO estudiante SET uuid=:uuid, codigoAlumno=:codigoAlumno, password=:password, nombre=:nombre, apellidoPaterno=:apellidoPaterno, apellidoMaterno=:apellidoMaterno, correo=:correo, telefono=:telefono";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(":uuid", $this->uuid);
         $stmt->bindParam(":codigoAlumno", $this->codigoAlumno);
