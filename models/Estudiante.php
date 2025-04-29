@@ -2,6 +2,7 @@
 // file: models/User.php
 include_once '../library/Database.php';
 include '../library/utils.php';
+
 class Estudiante
 {
     private $pdo;
@@ -139,5 +140,27 @@ class Estudiante
         $stmt->execute();
 
         return $stmt->fetchColumn() > 0;
+    }
+
+    public function login($correo, $password)
+    {
+
+        $query = "SELECT idEstudiante, correo, password FROM estudiante WHERE correo = :correo";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":correo", $correo);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Verificar la contraseña hasheada
+            if ($password == $row['password']) {
+                // Datos correctos
+                $this->idEstudiante = $row['idEstudiante'];
+                $this->correo = $row['correo'];
+                return true;
+            }
+        }
+        return false;
+
     }
 }
