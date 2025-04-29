@@ -85,17 +85,17 @@ switch ($request) {
             $estudiante->apellidoMaterno = $data->apellidoMaterno;
             $estudiante->telefono = $data->telefono;
             $estudiante->correo = $data->correo;
-            $estudiante->carrera = $data->carrera;
-            $estudiante->estado = $data->estado;
-            $estudiante->semestre = $data->semestre;
-            $estudiante->foto = $data->foto;
-            $estudiante->curriculum = $data->curriculum;
+            $estudiante->password = $data->password;
 
             // Verificar si el email ya existe
-            if ($estudiante->emailExists()) {
+            if ($estudiante->emailExiste()) {
                 http_response_code(409); // Conflict
                 echo json_encode(array("message" => "User already exists with this email."));
-            } else if ($estudiante->create()) {
+            }
+            if ($estudiante->codigoAlumnoExiste()) {
+                http_response_code(409); // Conflict
+                echo json_encode(array("message" => "User already exists with this email."));
+            }else if ($estudiante->create()) {
                 http_response_code(201);
                 echo json_encode(array("message" => "User was created."));
             } else {
