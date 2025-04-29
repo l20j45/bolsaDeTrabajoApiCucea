@@ -1,0 +1,17 @@
+meta {
+  name: UsuarioDelete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: http://localhost:82/bolsaDeTrabajoApi/Controllers/estudianteController.php
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "idEstudiante": 1004
+  }
+}

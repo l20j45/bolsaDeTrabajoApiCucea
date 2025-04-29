@@ -1,0 +1,29 @@
+meta {
+  name: UsuariosPut
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:82/bolsaDeTrabajoApi/Controllers/estudianteController.php
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idEstudiante": 1002,
+    "uuid": "3",
+    "codigoAlumno": "3",
+    "nombre": "3",
+    "apellidoPaterno": "3",
+    "apellidoMaterno": "3",
+    "telefono": "3",
+    "correo": "3",
+    "carrera": "3",
+    "estado": "3",
+    "semestre": "3",
+    "foto": "3",
+    "curriculum": "3"
+  }
+}
