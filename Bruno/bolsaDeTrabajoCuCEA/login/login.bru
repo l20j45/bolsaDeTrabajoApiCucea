@@ -1,0 +1,18 @@
+meta {
+  name: login
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:82/bolsaDeTrabajoApi/Controllers/loginController.php
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "correo" : "Test@tedt.com",
+    "password" : "Pickner12."
+  }
+}
