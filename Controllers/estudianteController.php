@@ -1,5 +1,8 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+header("Allow: GET, POST, OPTIONS, PUT, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Max-Age: 3600");
@@ -37,7 +40,9 @@ switch ($request) {
                         "estado" => $result->estado,
                         "semestre" => $result->semestre,
                         "foto" => $result->foto,
-                        "curriculum" => $result->curriculum
+                        "curriculum" => $result->curriculum,
+                        "descripcion" => $result->descripcion,
+                        "puestoDeseado" => $result->puestoDeseado
                     );
                 }
                 http_response_code(200);
@@ -68,7 +73,10 @@ switch ($request) {
                         "estado" => $result->estado,
                         "semestre" => $result->semestre,
                         "foto" => $result->foto,
-                        "curriculum" => $result->curriculum
+                        "curriculum" => $result->curriculum,
+                        "descripcion" => $result->descripcion,
+                        "puestoDeseado" => $result->puestoDeseado
+
                     );
                 }
 
@@ -85,13 +93,20 @@ switch ($request) {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Recibir los datos del formulario
-            $estudiante->codigoAlumno = isset($_POST['correo']) ? $_POST['correo'] : '';
-            $estudiante->nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
-            $estudiante->apellidoPaterno = isset($_POST['apellidoPaterno']) ? $_POST['apellidoPaterno'] : '';
-            $estudiante->apellidoMaterno = isset($_POST['apellidoMaterno']) ? $_POST['apellidoMaterno'] : '';
-            $estudiante->telefono = isset($_POST['codigoAlumno']) ? $_POST['codigoAlumno'] : '';
-            $estudiante->correo = isset($_POST['telefono']) ? $_POST['telefono'] : '';
-            $estudiante->password = isset($_POST['password']) ? $_POST['password'] : '';
+            $correo = isset($_POST['correo']) ? $_POST['correo'] : '';
+            $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
+            $apellidoPaterno = isset($_POST['apellidoPaterno']) ? $_POST['apellidoPaterno'] : '';
+            $apellidoMaterno = isset($_POST['apellidoMaterno']) ? $_POST['apellidoMaterno'] : '';
+            $codigoAlumno = isset($_POST['codigoAlumno']) ? $_POST['codigoAlumno'] : '';
+            $telefono = isset($_POST['telefono']) ? $_POST['telefono'] : '';
+            $password = isset($_POST['password']) ? $_POST['password'] : '';
+            $estudiante->codigoAlumno =$correo;
+            $estudiante->nombre = $nombre;
+            $estudiante->apellidoPaterno = $apellidoPaterno;
+            $estudiante->apellidoMaterno = $apellidoMaterno;
+            $estudiante->telefono = $telefono;
+            $estudiante->correo = $correo;
+            $estudiante->password = $password;
 
             // Validar datos
             if (empty($correo) || empty($nombre) || empty($apellidoPaterno) ||
@@ -122,13 +137,8 @@ switch ($request) {
         break;
 
     case 'PUT':
-        $data = json_decode(file_get_contents("php://input"));
-        $res = file_get_contents("my Url que trae el json");
-        echo $res; //Tenias parentesis en el echo, echo no usa parentesis
-
-        $response=json_decode($res,true);
-
-        var_dump($response);
+        $data = file_get_contents("php://input");
+        $data = json_decode($data);
         if (!empty($data->idEstudiante) && !empty($data->nombre) && !empty($data->correo)) {
             $estudiante->idEstudiante = $data->idEstudiante;
             $estudiante->nombre = $data->nombre;

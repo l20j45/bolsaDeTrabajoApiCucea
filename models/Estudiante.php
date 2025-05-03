@@ -21,6 +21,8 @@ class Estudiante
     public $semestre;
     public $foto;
     public $curriculum;
+    public $descripcion;
+    public $puestoDeseado;
 
 
     public function __construct()
@@ -72,7 +74,7 @@ class Estudiante
         return false;
     }
 
-    public function update()
+    public function update(): bool
     {
         $this->idEstudiante = filter_var($this->idEstudiante, FILTER_UNSAFE_RAW);
         $this->nombre = filter_var($this->nombre, FILTER_UNSAFE_RAW);
@@ -85,9 +87,11 @@ class Estudiante
         $this->semestre = filter_var($this->semestre, FILTER_UNSAFE_RAW);
         $this->foto = filter_var($this->foto, FILTER_UNSAFE_RAW);
         $this->curriculum = filter_var($this->curriculum, FILTER_UNSAFE_RAW);
-        if ($this->idEstudiante > 0) {
+        $this->descripcion = filter_var($this->descripcion, FILTER_UNSAFE_RAW);
+        $this->puestoDeseado = filter_var($this->puestoDeseado, FILTER_UNSAFE_RAW);
 
-            $query = "UPDATE estudiante SET nombre=:nombre, apellidoPaterno=:apellidoPaterno, apellidoMaterno=:apellidoMaterno, telefono=:telefono, correo=:correo, carrera=:carrera, estado=:estado, semestre=:semestre, foto=:foto, curriculum=:curriculum WHERE idEstudiante=:idEstudiante";
+        if ($this->idEstudiante > 0) {
+            $query = "UPDATE estudiante SET nombre=:nombre, apellidoPaterno=:apellidoPaterno, apellidoMaterno=:apellidoMaterno, telefono=:telefono, correo=:correo, carrera=:carrera, estado=:estado, semestre=:semestre, foto=:foto, curriculum=:curriculum, descripcion=:descripcion, puestoDeseado=:puestoDeseado WHERE idEstudiante=:idEstudiante";
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(":nombre", $this->nombre);
             $stmt->bindParam(":apellidoPaterno", $this->apellidoPaterno);
@@ -97,6 +101,27 @@ class Estudiante
             $stmt->bindParam(":carrera", $this->carrera);
             $stmt->bindParam(":estado", $this->estado);
             $stmt->bindParam(":semestre", $this->semestre);
+            $stmt->bindParam(":foto", $this->foto);
+            $stmt->bindParam(":curriculum", $this->curriculum);
+            $stmt->bindParam(":descripcion", $this->foto);
+            $stmt->bindParam(":puestoDeseado", $this->curriculum);
+            $stmt->bindParam(":idEstudiante", $this->idEstudiante, PDO::PARAM_INT);
+
+            if ($stmt->execute()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function updateArchivos(): bool
+    {
+        $this->foto = filter_var($this->foto, FILTER_UNSAFE_RAW);
+        $this->curriculum = filter_var($this->curriculum, FILTER_UNSAFE_RAW);
+
+        if ($this->idEstudiante > 0) {
+            $query = "UPDATE estudiante SET foto=:foto, curriculum=:curriculum WHERE idEstudiante=:idEstudiante";
+            $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(":foto", $this->foto);
             $stmt->bindParam(":curriculum", $this->curriculum);
             $stmt->bindParam(":idEstudiante", $this->idEstudiante, PDO::PARAM_INT);
