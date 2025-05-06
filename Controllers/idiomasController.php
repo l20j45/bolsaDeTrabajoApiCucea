@@ -4,7 +4,6 @@ header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Conte
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Allow: GET, POST, OPTIONS, PUT, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Max-Age: 3600");
 
 // Manejo específico para solicitudes OPTIONS
@@ -14,10 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 // file: controllers/UserController.php
 include_once '../models/Idioma.php';
-include_once '../models/Estudiante.php';
 
 $idiomas = new Idioma();
-$estudiante = new Estudiante();
+
 $request = $_SERVER["REQUEST_METHOD"];
 
 switch ($request) {
@@ -81,43 +79,6 @@ switch ($request) {
             } else {
                 http_response_code(404);
                 echo json_encode(array("message" => "No user found."));
-            }
-            break;
-        } else if (isset($_GET['idioma']) and $_GET['enum'] != '') {
-
-
-            if ($_GET['enum'] == 'carrera') {
-
-                $stmt = $estudiante->enumData('carrera');
-            } else if ($_GET['enum'] == 'estatus') {
-
-                $stmt = $estudiante->enumData('estatus');
-            }
-            $num = $stmt->rowCount();
-
-
-            if ($num > 0) {
-                $result = $stmt->fetch();
-                if ($result) {
-                    $string = str_replace(["enum(", ")"], "", $result->column_type);
-                    $array = explode("','", str_replace("'", "", $string));
-                    $array = array_filter($array);
-                    foreach ($array as &$value) {
-                        $value = mb_convert_encoding($value, 'UTF-8', 'auto');
-                    }
-                } else {
-                    echo "No se encontraron resultados";
-                }
-                $response = array(
-                    "message" => "ok",
-                    "data" => $array
-                );
-                header('Content-Type: application/json; charset=utf-8');
-                http_response_code(200);
-                echo json_encode($response, JSON_UNESCAPED_UNICODE);
-            } else {
-                http_response_code(404);
-                echo json_encode(array("message" => "Dato no encontrado."));
             }
             break;
         }
