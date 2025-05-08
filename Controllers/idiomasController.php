@@ -89,43 +89,54 @@ switch ($request) {
             echo json_encode(['success' => false, 'message' => 'Método no permitido']);
             exit;
         }
+        $data = file_get_contents("php://input");
+        $data = json_decode($data);
+        $idEstudiante = $data->idEstudiante;
 
-        $nombreIdioma = $_POST['idioma'] ?? '';
-        $idEstudiante = $_POST['idEstudiante'] ?? null;
-
-        if (empty($nombreIdioma) || $idEstudiante === null) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Faltan campos requeridos: idioma e idEstudiante.']);
+        $idiomas->idEstudiante = $idEstudiante;
+        $data->listas = implode(',', $data->valores);
+        $idiomas->listaDeIdiomas = $data->listas;
+        if ($idiomas->listaDeIdiomas == '') {
+            $idiomas->reset();
+            http_response_code(200);
+            echo json_encode(['success' => false, 'message' => 'Se borraron todas las habilidades.']);
             exit;
         }
+        $delete = $idiomas->delete();
 
-        $idiomas->nombreIdiomasAdicionales = $nombreIdioma;
-        $idiomas->idEstudiante = $idEstudiante;
+        foreach ($data->valores as $idioma) {
 
-        $idiomaCreadoId = $idiomas->createOne();
-        if ($idiomaCreadoId["success"]) {
-            $idiomas->idIdioma = $idiomaCreadoId["extras"];
-            if ($idiomas->createRelation()) {
-                http_response_code(201);
-                echo json_encode(['success' => true, 'message' => 'Idioma y relación creados exitosamente.']);
+            if (empty($idioma) || $idEstudiante === null) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Faltan campos requeridos: idioma e idEstudiante.']);
+                exit;
+            }
+
+            $idiomas->nombreIdiomasAdicionales = $idioma;
+            $idiomaCreadoId = $idiomas->createOne();
+            if ($idiomaCreadoId["success"]) {
+                $idiomas->idIdioma = $idiomaCreadoId["extras"];
+                if ($idiomas->createRelation()) {
+                    http_response_code(201);
+                    echo json_encode(['success' => true, 'message' => 'Idioma y relación creados exitosamente.']);
+                } else {
+                    http_response_code(503);
+                    echo json_encode(['success' => false, 'message' => 'No se pudo crear la relación pero si el idioma.']);
+                }
+            } elseif ($idiomaCreadoId["success"] == false) {
+                $idiomas->idIdioma = $idiomaCreadoId["extras"];
+                if ($idiomas->createRelation()) {
+                    http_response_code(201);
+                    echo json_encode(['success' => true, 'message' => 'Relación creada exitosamente y el idioma si existia.']);
+                } else {
+                    http_response_code(503);
+                    echo json_encode(['success' => false, 'message' => 'No se pudo crear la relación el idioma si existia, pero no se creo la relacion.']);
+                }
             } else {
                 http_response_code(503);
-                echo json_encode(['success' => false, 'message' => 'No se pudo crear la relación pero si el idioma.']);
+                echo json_encode(['success' => false, 'message' => 'No se pudo crear el idioma.']);
             }
-        } elseif ($idiomaCreadoId["success"] == false) {
-            $idiomas->idIdioma = $idiomaCreadoId["extras"];
-            if ($idiomas->createRelation()) {
-                http_response_code(201);
-                echo json_encode(['success' => true, 'message' => 'Relación creada exitosamente y el idioma si existia.']);
-            } else {
-                http_response_code(503);
-                echo json_encode(['success' => false, 'message' => 'No se pudo crear la relación el idioma si existia, pero no se creo la relacion.']);
-            }
-        } else {
-            http_response_code(503);
-            echo json_encode(['success' => false, 'message' => 'No se pudo crear el idioma.']);
         }
-
         break;
 
 //    case 'PUT':

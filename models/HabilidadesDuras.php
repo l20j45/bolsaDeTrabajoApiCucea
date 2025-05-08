@@ -85,7 +85,7 @@ class HabilidadesDuras
         $verificacion = $this->checkRelation();
 
         if ($verificacion["success"]) {
-            $query = "INSERT INTO habilidadesDurasAlumnos SET idEstudiante=:idEstudiante, idHabilidadesDura=:idHabilidadesDuras";
+            $query = "INSERT INTO habilidadesDurasAlumnos SET idEstudiante=:idEstudiante, idHabilidadesDuras=:idHabilidadesDuras";
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(":idEstudiante", $this->idEstudiante);
             $stmt->bindParam(":idHabilidadesDuras", $this->idHabilidadesDuras);
@@ -109,7 +109,7 @@ class HabilidadesDuras
         $this->nombreHabilidadesDuras = filter_var($this->nombreHabilidadesDuras, FILTER_UNSAFE_RAW);
         $this->idEstudiante = filter_var($this->idEstudiante, FILTER_UNSAFE_RAW);
 
-        $query = "SELECT * FROM habilidadesDurasAlumnos where idEstudiante=:idEstudiante and idHabilidadesDura=:idHabilidadesDura";
+        $query = "SELECT * FROM habilidadesDurasAlumnos where idEstudiante=:idEstudiante and idHabilidadesDuras=:idHabilidadesDura";
 
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(":idEstudiante", $this->idEstudiante);
@@ -133,16 +133,14 @@ class HabilidadesDuras
 
     public function delete()
     {
-        $this->idEstudiante = filter_var($this->idEstudiante, FILTER_VALIDATE_INT);
 
+        $this->idEstudiante = filter_var($this->idEstudiante, FILTER_VALIDATE_INT);
         if (!$this->idEstudiante || $this->idEstudiante <= 0) {
             return false;
         }
-
         if (empty($this->listaDeHabilidadesDuras)) {
             return false;
         }
-
         $habilidadesArray = explode(',', $this->listaDeHabilidadesDuras);
         $habilidadesLimpios = array_map(function ($habilidades) {
             return $this->pdo->quote(trim($habilidades));
@@ -157,10 +155,7 @@ class HabilidadesDuras
                   FROM habilidadesDuras 
                   WHERE nombreHabilidadesDuras IN ($implodeString)
               )";
-
         try {
-
-
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(":idEstudiante", $this->idEstudiante, PDO::PARAM_INT);
             return $stmt->execute();
@@ -169,6 +164,15 @@ class HabilidadesDuras
 
             return false;
         }
+    }
+
+    public function reset()
+    {
+        $query = "Delete from habilidadesDurasAlumnos where idEstudiante=:idEstudiante";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":idEstudiante", $this->idEstudiante, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt;
     }
 
 

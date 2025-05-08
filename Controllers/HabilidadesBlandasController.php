@@ -38,8 +38,7 @@ switch ($request) {
                 echo json_encode(array("message" => "No users found."));
             }
             break;
-        }
-        else if (isset($_GET['idEstudiante']) and $_GET['idEstudiante'] != '') {
+        } else if (isset($_GET['idEstudiante']) and $_GET['idEstudiante'] != '') {
 
             $habilidadBlanda->idEstudiante = $_GET['idEstudiante'];
             $stmt = $habilidadBlanda->readHabilidadesBlandasDelUsuario();
@@ -89,43 +88,54 @@ switch ($request) {
             echo json_encode(['success' => false, 'message' => 'Método no permitido']);
             exit;
         }
+        $data = file_get_contents("php://input");
+        $data = json_decode($data);
+        $idEstudiante = $data->idEstudiante;
 
-        $nombreHabilidad = $_POST['habilidadHablanda'] ?? '';
-        $idEstudiante = $_POST['idEstudiante'] ?? null;
-
-        if (empty($nombreHabilidad) || $idEstudiante === null) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Faltan campos requeridos: habilidad e idEstudiante.']);
+        $habilidadBlanda->idEstudiante = $idEstudiante;
+        $data->listas = implode(',', $data->valores);
+        $habilidadBlanda->listaDeHabilidadesBlandas = $data->listas;
+        if ($habilidadBlanda->listaDeHabilidadesBlandas == '') {
+            $habilidadBlanda->reset();
+            http_response_code(200);
+            echo json_encode(['success' => false, 'message' => 'Se borraron todas las habilidades.']);
             exit;
         }
+        $delete = $habilidadBlanda->delete();
+        echo $delete;
+        foreach ($data->valores as $habilidadBlandaItem) {
+            if (empty($habilidadBlanda) || $idEstudiante === null) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Faltan campos requeridos: habilidad e idEstudiante.']);
+                exit;
+            }
 
-        $habilidadBlanda->nombreHabilidadesBlandas = $nombreHabilidad;
-        $habilidadBlanda->idEstudiante = $idEstudiante;
+            $habilidadBlanda->nombreHabilidadesBlandas = $habilidadBlandaItem;
 
-        $habilidadCreadaId = $habilidadBlanda->createOne();
-        if ($habilidadCreadaId["success"]) {
-            $habilidadBlanda->idHabilidadesBlandas = $habilidadCreadaId["extras"];
-            if ($habilidadBlanda->createRelation()) {
-                http_response_code(201);
-                echo json_encode(['success' => true, 'message' => 'Habilidad y relación creados exitosamente.']);
+            $habilidadCreadaId = $habilidadBlanda->createOne();
+            if ($habilidadCreadaId["success"]) {
+                $habilidadBlanda->idHabilidadesBlandas = $habilidadCreadaId["extras"];
+                if ($habilidadBlanda->createRelation()) {
+                    http_response_code(201);
+                    echo json_encode(['success' => true, 'message' => 'Habilidad y relación creados exitosamente.']);
+                } else {
+                    http_response_code(503);
+                    echo json_encode(['success' => false, 'message' => 'No se pudo crear la relación pero si el Habilidad.']);
+                }
+            } elseif ($habilidadCreadaId["success"] == false) {
+                $habilidadBlanda->idHabilidadesBlandas = $habilidadCreadaId["extras"];
+                if ($habilidadBlanda->createRelation()) {
+                    http_response_code(201);
+                    echo json_encode(['success' => true, 'message' => 'Relación creada exitosamente y el Habilidad si existia.']);
+                } else {
+                    http_response_code(503);
+                    echo json_encode(['success' => false, 'message' => 'No se pudo crear la relación el Habilidad si existia, pero no se creo la relacion.']);
+                }
             } else {
                 http_response_code(503);
-                echo json_encode(['success' => false, 'message' => 'No se pudo crear la relación pero si el Habilidad.']);
+                echo json_encode(['success' => false, 'message' => 'No se pudo crear el Habilidad.']);
             }
-        } elseif ($habilidadCreadaId["success"] == false) {
-            $habilidadBlanda->idHabilidadesBlandas = $habilidadCreadaId["extras"];
-            if ($habilidadBlanda->createRelation()) {
-                http_response_code(201);
-                echo json_encode(['success' => true, 'message' => 'Relación creada exitosamente y el Habilidad si existia.']);
-            } else {
-                http_response_code(503);
-                echo json_encode(['success' => false, 'message' => 'No se pudo crear la relación el Habilidad si existia, pero no se creo la relacion.']);
-            }
-        } else {
-            http_response_code(503);
-            echo json_encode(['success' => false, 'message' => 'No se pudo crear el Habilidad.']);
         }
-
         break;
 
     case 'DELETE':

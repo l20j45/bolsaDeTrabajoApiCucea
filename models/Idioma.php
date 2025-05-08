@@ -133,6 +133,7 @@ class Idioma
 
     public function delete()
     {
+
         $this->idEstudiante = filter_var($this->idEstudiante, FILTER_VALIDATE_INT);
 
         if (!$this->idEstudiante || $this->idEstudiante <= 0) {
@@ -142,6 +143,8 @@ class Idioma
         if (empty($this->listaDeIdiomas)) {
             return false;
         }
+
+
 
         $idiomasArray = explode(',', $this->listaDeIdiomas);
         $idiomasLimpios = array_map(function($idioma) {
@@ -164,13 +167,22 @@ class Idioma
 
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(":idEstudiante", $this->idEstudiante, PDO::PARAM_INT);
-            echo $stmt->debugDumpParams();
+
             return $stmt->execute();
 
         } catch (PDOException $e) {
 
             return false;
         }
+    }
+
+    public function reset()
+    {
+        $query = "Delete from idiomasAdicionalesAlumnos where idEstudiante=:idEstudiante";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":idEstudiante", $this->idEstudiante, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt;
     }
 
 

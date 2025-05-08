@@ -171,5 +171,14 @@ class HabilidadesBlandas
         }
     }
 
+    public function reset()
+    {
+        $query = "Delete from habilidadesBlandasAlumnos where idEstudiante=:idEstudiante";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":idEstudiante", $this->idEstudiante, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt;
+    }
+
 
 }
