@@ -1,0 +1,43 @@
+meta {
+  name: Guardar
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:82/bolsaDeTrabajoApi/Controllers/HabilidadesDurasController.php?
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "uuid": "1",
+    "codigoAlumno": "1",
+    "nombre": "1",
+    "apellidoPaterno": "1",
+    "apellidoMaterno": "1",
+    "telefono": "1",
+    "correo": "1",
+    "carrera": "1",
+    "estado": "1",
+    "semestre": "1",
+    "foto": "1",
+    "curriculum": "1"
+  }
+  
+  
+}
+
+body:form-urlencoded {
+  idioma: dfgfdg
+}
+
+body:multipart-form {
+  habilidadHablanda: habilidadHablanda
+  idEstudiante: 1005
+}

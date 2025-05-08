@@ -1,0 +1,15 @@
+meta {
+  name: UsuarioEnumEstatus
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:82/bolsaDeTrabajoApi/Controllers/estudianteController.php?enum=estatus
+  body: none
+  auth: none
+}
+
+params:query {
+  enum: estatus
+}

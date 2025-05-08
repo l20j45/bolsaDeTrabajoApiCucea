@@ -1,0 +1,18 @@
+meta {
+  name: Borrar
+  type: http
+  seq: 6
+}
+
+delete {
+  url: http://localhost:82/bolsaDeTrabajoApi/Controllers/HabilidadesBlandasController.php
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idEstudiante": 1005,
+    "listaDeHabilidadesBlandas": "Ingles,Alemsadan,Japones"
+  }
+}

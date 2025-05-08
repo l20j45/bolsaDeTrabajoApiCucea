@@ -1,0 +1,20 @@
+meta {
+  name: UsuarioEnumCarrera
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:82/bolsaDeTrabajoApi/Controllers/estudianteController.php?enum=carrera
+  body: none
+  auth: none
+}
+
+params:query {
+  enum: carrera
+}
+
+headers {
+  content-type: text/plain; charset=utf-8
+  : 
+}
