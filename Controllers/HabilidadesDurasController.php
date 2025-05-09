@@ -12,10 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 // file: controllers/UserController.php
-include_once '../models/HabilidadesBlandas.php';
+
 include_once '../models/HabilidadesDuras.php';
 
-$habilidadBlanda = new HabilidadesBlandas();
+
 $habilidadDura = new HabilidadesDuras();
 
 $request = $_SERVER["REQUEST_METHOD"];
@@ -29,8 +29,8 @@ switch ($request) {
                 $response = array("message" => "ok", "data" => array());
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
-                        "IdHabilidadesDuras" => $result->idHabilidadesDuras,
-                        "NombresHabilidadesDuras" => $result->nombreHabilidadesDuras
+                        "idHabilidadesDuras" => $result->idHabilidadesDuras,
+                        "nombresHabilidadesDuras" => $result->nombreHabilidadesDuras
                     );
                 }
                 http_response_code(200);
@@ -51,7 +51,7 @@ switch ($request) {
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
                         "idHabilidadesDuras" => $result->idHabilidadesDuras,
-                        "NombresHabilidadesDuras" => $result->nombreHabilidadesDuras
+                        "nombresHabilidadesDuras" => $result->nombreHabilidadesDuras
                     );
                 }
 
@@ -71,7 +71,7 @@ switch ($request) {
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
                         "idHabilidadesDuras" => $result->idHabilidadesDuras,
-                        "NombresHabilidadesDuras" => $result->nombreHabilidadesDuras
+                        "nombresHabilidadesDuras" => $result->nombreHabilidadesDuras
                     );
                 }
 

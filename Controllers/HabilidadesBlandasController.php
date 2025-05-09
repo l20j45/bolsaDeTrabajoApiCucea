@@ -27,8 +27,8 @@ switch ($request) {
                 $response = array("message" => "ok", "data" => array());
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
-                        "IdHabilidadesBlandas" => $result->idHabilidadesBlandas,
-                        "NombresHabilidadesBlandas" => $result->nombreHabilidadesBlandas
+                        "idHabilidadesBlandas" => $result->idHabilidadesBlandas,
+                        "nombresHabilidadesBlandas" => $result->nombreHabilidadesBlandas
                     );
                 }
                 http_response_code(200);
@@ -48,8 +48,8 @@ switch ($request) {
                 $response = array("message" => "ok", "data" => array());
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
-                        "IdHabilidadesBlandas" => $result->idHabilidadesBlandas,
-                        "NombresHabilidadesBlandas" => $result->nombreHabilidadesBlandas
+                        "idHabilidadesBlandas" => $result->idHabilidadesBlandas,
+                        "nombresHabilidadesBlandas" => $result->nombreHabilidadesBlandas
                     );
                 }
 
@@ -68,8 +68,8 @@ switch ($request) {
                 $response = array("message" => "ok", "data" => array());
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
-                        "IdHabilidadesBlandas" => $result->idHabilidadesBlandas,
-                        "NombresHabilidadesBlandas" => $result->nombreHabilidadesBlandas
+                        "idHabilidadesBlandas" => $result->idHabilidadesBlandas,
+                        "nombresHabilidadesBlandas" => $result->nombreHabilidadesBlandas
                     );
                 }
 

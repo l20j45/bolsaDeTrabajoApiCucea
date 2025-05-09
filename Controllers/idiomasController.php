@@ -28,7 +28,7 @@ switch ($request) {
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
                         "idIdioma" => $result->idIdiomasAdicionales,
-                        "NombresIdiomasAdicionales" => $result->nombreIdiomasAdicionales
+                        "nombresIdiomasAdicionales" => $result->nombreIdiomasAdicionales
                     );
                 }
                 http_response_code(200);
@@ -50,7 +50,7 @@ switch ($request) {
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
                         "idIdioma" => $result->idIdiomasAdicionales,
-                        "NombresIdiomasAdicionales" => $result->nombreIdiomasAdicionales
+                        "nombresIdiomasAdicionales" => $result->nombreIdiomasAdicionales
                     );
                 }
 
@@ -70,7 +70,7 @@ switch ($request) {
                 while ($result = $stmt->fetch()) {
                     $response["data"][] = array(
                         "idIdioma" => $result->idIdiomasAdicionales,
-                        "NombresIdiomasAdicionales" => $result->nombreIdiomasAdicionales
+                        "nombresIdiomasAdicionales" => $result->nombreIdiomasAdicionales
                     );
                 }
 
