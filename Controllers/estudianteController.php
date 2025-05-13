@@ -154,14 +154,14 @@ switch ($request) {
                 exit;
             }
 
-//            if ($estudiante->emailExiste()) {
-//                http_response_code(409); // Conflict
-//                echo json_encode(array("message" => "Ya existe un usuario con este correo."));
-//            }
-//            else if ($estudiante->codigoAlumnoExiste()) {
-//                http_response_code(409); // Conflict
-//                echo json_encode(array("message" => "Ya existe un usuario con este codigo."));
-//            }else
+            if ($estudiante->emailExiste()) {
+                http_response_code(409); // Conflict
+                echo json_encode(array("message" => "Ya existe un usuario con este correo."));
+            }
+            else if ($estudiante->codigoAlumnoExiste()) {
+                http_response_code(409); // Conflict
+                echo json_encode(array("message" => "Ya existe un usuario con este codigo."));
+            }else
             if ($estudiante->create()) {
                 http_response_code(201);
                 echo json_encode(array("message" => "User was created."));
